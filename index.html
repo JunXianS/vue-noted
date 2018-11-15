@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>课程购物车案例(vue)</title>
+    <!-- 引入样式表 -->
+    <link rel="stylesheet" type="text/css" href="./css/main.css">
+</head>
+
+<body>
+    <div id="app" v-cloak>
+        <template v-if="result.length">
+            <table>
+                <thead>
+                    <tr>
+                        <td>序号</td>
+                        <td>课程名称</td>
+                        <td>课程单价</td>
+                        <td>购买数量</td>
+                        <td>操作</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(item,index) in result">
+                        <td>{{index+1}}</td>
+                        <td>{{item.test1}}</td>
+                        <td>{{item.test2}}</td>
+                        <td>
+                            <button @click="custNum(index)" :disabled="dataModel[index].val === 0">-</button>
+                            <!-- <span v-bind:value="'curConditon'+index"></span> -->
+                            <span>{{dataModel[index].val}}</span>
+                            <!-- <input type="text" v-model="dataModel[index].val"/> -->
+                            <button @click="addNum(index)">+</button>
+                        </td>
+                        <td><button @click="delNum(index)">移除</button></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="total-prices">￥购买总价：{{moneyall}}</div>
+
+    </template>
+            <div v-else>购物车为空</div>
+
+    </div>
+    <!--  引入vue.js -->
+    <script src="./js/vue.js"></script>
+    <!-- 引入自定义的js -->
+    <script src="./js/main.js"></script>
+    <script>
+    var vm = new Vue({
+        el: '#app',
+        data() {
+            return {
+
+                dataModel: [],
+                result: [{
+                    id: "01",
+                        test1: "JavaScript从入门的放弃",
+                    test2: "398",
+
+                }, {
+                    id: "02",
+                    test1: "Java从入门的吐血",
+                    test2: "698",
+
+                }, {
+                    id: "03",
+                    test1: "PHP是世界上最好语言",
+                    test2: "99",
+
+                }, {
+                    id: "04",
+                    test1: "mysql从入门到删库",
+                    test2: "128",
+
+                }, {
+                    id: "05",
+                    test1: "Html从入门到精通",
+                    test2: "398",
+
+                }]
+            }
+        },
+
+        created: function() {
+            for (var i = 0; i < this.result.length; i++) {
+                var val = { val: 5 };
+                this.dataModel.push(val);
+
+            }
+        },
+        computed: {
+            moneyall: function() {
+                var totalPrice = 0;
+                for (var i = 0; i < this.result.length; i++) {
+                    totalPrice = totalPrice + this.result[i].test2 * this.dataModel[i].val
+                }
+                // 每隔三位添加一个逗号
+                totalPrice = totalPrice.toString().replace(/\B(?=(\d{3})+$)/g, ',');
+                return totalPrice;
+            },
+        },
+        methods: {
+            custNum(index) {
+                this.dataModel[index].val = parseInt(this.dataModel[index].val) - 1;
+            },
+            addNum(index) {
+                this.dataModel[index].val = parseInt(this.dataModel[index].val) + 1;
+            },
+            delNum(index) {
+                if (confirm("天呐！确定要删除吗？")) {
+                    this.result.splice(index, 1);
+                }
+            },
+        }
+    })
+    </script>
+</body>
+
+</html>
+<!-- 
+ 要求: 运用阶段五中所学的vue.js的知识实现如动态图所示效果,请直接在index.html和mian.css及main.js中写相应的代码。
+
+功能描述: 
+    1、首先在页面中按照动态图创建一个表格，在表格中写上相应内容（表格的行数不做限制）
+    2、当点击 购买数量列中的 加号按钮时 购买数量相应增加，同时购买总价也随之发生相应变化。（购买总价 = 课程单价 * 购买数量）。
+    3、当点击 购买数量列中的 减号按钮时 购买数量相应减少，如果购买数量等于 0 时，要禁止点击减号按钮，同时购买总价也随之发生相应变化（购买总价 = 课程单价 * 购买数量）。
+    4、点击 操作列中的 移除按钮可以把当前行中进行删除操作，同时购买总价也随之发生相应变化。
+    5、如果把表格中购买的课程全部移除，在当前页面中显示 购物车为空 。
+    
+ 注意：css样式中的：表格、字体尺寸和颜色不要求精细，重点是课程购物车功能的实现
+
+ -->
